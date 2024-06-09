@@ -1,0 +1,29 @@
+import { minimatch } from "minimatch";
+
+const PUBLIC_POSTS_DIR = "8 public/post/";
+const publicPostsSource = {
+  dir: PUBLIC_POSTS_DIR,
+  filter: (path: string) => {
+    const BAD_GLOBS = ["**/archive/**", "**/draft/**"];
+    return (
+      minimatch(path, `${PUBLIC_POSTS_DIR}/**`) &&
+      !BAD_GLOBS.some((glob) => minimatch(path, glob))
+    );
+  },
+};
+
+export const CONFIG = {
+  METADATA_URI: `obsidian://advanced-uri?vault=obsidian-caleb&commandid=metadata-extractor%253Awrite-metadata-json`,
+  METADATA_PLUGIN_DIR:
+    "/Users/chuangcaleb/Documents/Obsidian/obsidian-caleb/.obsidian/plugins/metadata-extractor",
+  OBSIDIAN_DIR: "/Users/chuangcaleb/Documents/Obsidian/obsidian-caleb/",
+  // DIST_DIR: "./dist",
+  DIST_DIR:
+    "/Users/chuangcaleb/Documents/ComputerScience/web/chuangcaleb.com/src/content",
+  COLLECTIONS_DIR: "obsidian-collection",
+  NOTES_DIR: "obsidian-note",
+  GOOD_GLOBS: ["8 public/post/**"],
+  BAD_GLOBS: ["**/archive/**", "**/draft/**"],
+  SOURCE_PATHS: [publicPostsSource],
+  COLLECTION_TAGS: ["📂/collection", "📂/collection/series"],
+};
