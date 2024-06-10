@@ -20,8 +20,8 @@ export function renameFilenameFromPath(string: string, newFilename: string) {
 
 export function getNoteRoute(filepath: string) {
   const { dir, name } = path.parse(filepath);
-  if (name === "index") return slugify(dir);
-  return slugify(path.join(dir, name));
+  if (name === "index") return dir;
+  return path.join(dir, name);
 }
 
 export function stripWikilink(wikilink: string) {
