@@ -96,9 +96,9 @@ const unWikilinkedCollectionCache: CollectionCacheEntries = Object.entries(
 ).map(([key, values]) => [stripWikilink(key), values]);
 
 // popualate collection note in cache with matching collection items
-for (const collection of unWikilinkedCollectionCache) {
+for (const [index, collection] of unWikilinkedCollectionCache.entries()) {
   const collectionNoteName = collection[0];
-  const collectionItems = collection[1].map(getNoteRoute);
+  // const collectionItems = collection[1].map(getNoteRoute);
   const collectionNoteIndex = metadataCache.findIndex(
     (note) => note.fileName === collectionNoteName
   );
@@ -107,14 +107,23 @@ for (const collection of unWikilinkedCollectionCache) {
   if (!collectionNoteIndex)
     throw new Error(`invalid collection note ${collectionNoteName}?`);
 
-  // TODO: if series, then just check for synchronization
   const collectionNoteCopy = metadataCache[collectionNoteIndex];
-  // append collection items to frontmatter
-  if (!collectionNoteCopy.frontmatter) {
-    metadataCache[collectionNoteIndex].frontmatter = {};
+  // ! append collection items to frontmatter — REMOVED
+  // if (!collectionNoteCopy.frontmatter) {
+  //   metadataCache[collectionNoteIndex].frontmatter = {};
+  // }
+  // metadataCache[collectionNoteIndex].frontmatter!.collectionItems =
+  //   collectionItems;
+
+  // * if series, add frontmatter to collections-cache
+  if (collectionNoteCopy.tags?.includes("📂/collection/series")) {
+    // TODO: if series, then just check for synchronization
+    // loop through frontmatter and pop from cache, throw error on diff
+    unWikilinkedCollectionCache[index][1] =
+      collectionNoteCopy.frontmatter?.series.map((s: string) =>
+        Resolver.resolve(s)
+      );
   }
-  metadataCache[collectionNoteIndex].frontmatter!.collectionItems =
-    collectionItems;
 
   // else {
   //   const resolvedSeriesItems =
