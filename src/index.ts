@@ -81,12 +81,13 @@ const Resolver = new MetaResolver(metadataCache);
 const collectionCache: CollectionCache = {};
 for (const file of metadataCache) {
   const collection = file.frontmatter?.collection;
-  if (!collection) continue;
+  if (!collection) continue; // FIXME: sometimes collection is an array
 
+  const slugRelativePath = getNoteRoute(file.relativePath);
   if (Array.isArray(collectionCache[collection])) {
-    collectionCache[collection].push(file.relativePath);
+    collectionCache[collection].push(slugRelativePath);
   } else {
-    collectionCache[collection] = [file.relativePath];
+    collectionCache[collection] = [slugRelativePath];
   }
 }
 
@@ -176,7 +177,8 @@ for (const file of metadataCache) {
   const destination = path.join(notesDistDir, file.relativePath);
 
   // prepare final frontmatter
-  // TODO: modify paths; sanitize links
+  // TODO: sanitize links
+  // TODO: add links/backlinks into frontmatter?
   // TODO: add title frontmatter (if not exists) from context, or filename
   const finalFrontmatter = {
     ...processFrontmatter(file.frontmatter, Resolver),
