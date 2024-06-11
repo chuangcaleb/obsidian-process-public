@@ -12,8 +12,18 @@ export function slugify(str: string) {
     .replace(/-+/g, "-"); // remove consecutive hyphens
 }
 
+export function renameFilenameFromPath(string: string, newFilename: string) {
+  const { dir, ext } = path.parse(string);
+
+  return path.join(dir, newFilename + ext);
+}
+
 export function getNoteRoute(filepath: string) {
   const { dir, name } = path.parse(filepath);
   if (name === "index") return slugify(dir);
   return slugify(path.join(dir, name));
+}
+
+export function stripWikilink(wikilink: string) {
+  return wikilink.slice(2, wikilink.length - 2);
 }
