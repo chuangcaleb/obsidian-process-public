@@ -17,9 +17,9 @@ export const CONFIG = {
   METADATA_PLUGIN_DIR:
     "/Users/chuangcaleb/Documents/Obsidian/obsidian-caleb/.obsidian/plugins/metadata-extractor",
   OBSIDIAN_DIR: "/Users/chuangcaleb/Documents/Obsidian/obsidian-caleb/",
-  // DIST_DIR: "./dist",
-  DIST_DIR:
-    "/Users/chuangcaleb/Documents/ComputerScience/web/chuangcaleb.com/src/content",
+  DIST_DIR: "./dist",
+  // DIST_DIR:
+  //   "/Users/chuangcaleb/Documents/ComputerScience/web/chuangcaleb.com/src/content",
   COLLECTIONS_DIR: "obsidian-collection",
   NOTES_DIR: "obsidian-note",
   GOOD_GLOBS: ["8 public/post/**"],
