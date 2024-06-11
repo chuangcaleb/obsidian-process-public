@@ -1,4 +1,5 @@
 import { minimatch } from "minimatch";
+import path from "path";
 
 const PUBLIC_POSTS_DIR = "8 public/post/";
 const publicPostsSource = {
@@ -14,9 +15,8 @@ const publicPostsSource = {
 
 export const CONFIG = {
   METADATA_URI: `obsidian://advanced-uri?vault=obsidian-caleb&commandid=metadata-extractor%253Awrite-metadata-json`,
-  METADATA_PLUGIN_DIR:
-    "/Users/chuangcaleb/Documents/Obsidian/obsidian-caleb/.obsidian/plugins/metadata-extractor",
-  OBSIDIAN_DIR: "/Users/chuangcaleb/Documents/Obsidian/obsidian-caleb/",
+  METADATA_PLUGIN_DIR: ".obsidian/plugins/metadata-extractor",
+  OBSIDIAN_DIR: path.resolve(process.cwd() + "/../.."),
   DIST_DIR: "./dist",
   // DIST_DIR:
   //   "/Users/chuangcaleb/Documents/ComputerScience/web/chuangcaleb.com/src/content",

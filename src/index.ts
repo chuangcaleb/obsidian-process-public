@@ -46,7 +46,11 @@ if (flag) {
 /*                                    setup                                   */
 /* -------------------------------------------------------------------------- */
 
-const metadataPath = path.join(CONFIG.METADATA_PLUGIN_DIR, "metadata.json");
+const metadataPath = path.join(
+  CONFIG.OBSIDIAN_DIR,
+  CONFIG.METADATA_PLUGIN_DIR,
+  "metadata.json"
+);
 const cacheBuffer = fs.readFileSync(metadataPath);
 const originalMetadataCache: Metadata[] = JSON.parse(cacheBuffer.toString());
 
@@ -104,9 +108,8 @@ for (const collection of unWikilinkedCollectionCache) {
     (note) => note.fileName === collectionNoteName
   );
 
-  // handle error
-  if (!collectionNoteIndex)
-    throw new Error(`invalid collection note ${collectionNoteName}?`);
+  if (collectionNoteIndex === -1)
+    throw new Error(`invalid collection note: ${collectionNoteName}`);
 
   const collectionNoteCopy = metadataCache[collectionNoteIndex];
 
