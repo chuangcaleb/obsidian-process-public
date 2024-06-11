@@ -97,9 +97,9 @@ const unWikilinkedCollectionCache: CollectionCacheEntries = Object.entries(
 ).map(([key, values]) => [stripWikilink(key), values]);
 
 // popualate collection note in cache with matching collection items
-for (const [index, collection] of unWikilinkedCollectionCache.entries()) {
+for (const collection of unWikilinkedCollectionCache) {
   const collectionNoteName = collection[0];
-  // const collectionItems = collection[1].map(getNoteRoute);
+  const collectionItems = collection[1].map(getNoteRoute);
   const collectionNoteIndex = metadataCache.findIndex(
     (note) => note.fileName === collectionNoteName
   );
@@ -109,37 +109,27 @@ for (const [index, collection] of unWikilinkedCollectionCache.entries()) {
     throw new Error(`invalid collection note ${collectionNoteName}?`);
 
   const collectionNoteCopy = metadataCache[collectionNoteIndex];
-  // ! append collection items to frontmatter — REMOVED
-  // if (!collectionNoteCopy.frontmatter) {
-  //   metadataCache[collectionNoteIndex].frontmatter = {};
-  // }
-  // metadataCache[collectionNoteIndex].frontmatter!.collectionItems =
-  //   collectionItems;
 
   // * if series, add frontmatter to collections-cache
-  if (collectionNoteCopy.tags?.includes("📂/collection/series")) {
-    // TODO: if series, then just check for synchronization
-    // loop through frontmatter and pop from cache, throw error on diff
-    unWikilinkedCollectionCache[index][1] =
-      collectionNoteCopy.frontmatter?.series.map((s: string) =>
-        Resolver.resolve(s)
-      );
-  }
-
-  // else {
-  //   const resolvedSeriesItems =
-  //     collectionNoteCopy.frontmatter?.series.map(resolve);
-  //   metadataCache[collectionNoteIndex].frontmatter!.series =
-  //     resolvedSeriesItems;
-  // }
-
-  // if has a collection tag, rename rel path to index
-  // if (!collectionNoteCopy?.tags) throw new Error("Collection should have tag");
-  // if (collectionNoteCopy.tags.some((t) => CONFIG.COLLECTION_TAGS.includes(t)))
   metadataCache[collectionNoteIndex].relativePath = renameFilenameFromPath(
     collectionNoteCopy.relativePath,
     "index"
   );
+
+  // create frontmatter if doesn't exist
+  if (!collectionNoteCopy.frontmatter) {
+    metadataCache[collectionNoteIndex].frontmatter = {};
+  }
+  if (collectionNoteCopy.frontmatter?.series) {
+    metadataCache[collectionNoteIndex].frontmatter = {
+      ...metadataCache[collectionNoteIndex].frontmatter,
+      collectionItems: collectionNoteCopy.frontmatter.series,
+      series: true,
+    };
+    continue;
+  }
+  metadataCache[collectionNoteIndex].frontmatter!.collectionItems =
+    collectionItems;
 }
 
 // TODO: slugify everything?
@@ -152,24 +142,13 @@ for (const [index, collection] of unWikilinkedCollectionCache.entries()) {
 // if (fs.existsSync(CONFIG.DIST_DIR))
 //   fs.rmSync(CONFIG.DIST_DIR, { recursive: true });
 
-// create folders
-const collectionsDistDir = path.join(CONFIG.DIST_DIR, CONFIG.COLLECTIONS_DIR);
+// create folder
 const notesDistDir = path.join(CONFIG.DIST_DIR, CONFIG.NOTES_DIR);
-customWriteDir(collectionsDistDir);
 customWriteDir(notesDistDir);
 
 // write cache
 // const metadataDistPath = path.join(metadataDistDir, "/metadata.json");
 // fs.writeFileSync(metadataDistPath, JSON.stringify(metadataCache));
-
-// write collections
-for (const collection of unWikilinkedCollectionCache) {
-  const collectionsMetaDistPath = path.join(
-    collectionsDistDir,
-    collection[0] + ".json"
-  );
-  fs.writeFileSync(collectionsMetaDistPath, JSON.stringify(collection[1]));
-}
 
 // write each file
 for (const file of metadataCache) {

@@ -16,7 +16,7 @@ export class MetaResolver {
   }
 
   resolveHelper(value: unknown) {
-    if (typeof value !== "string") return null;
+    if (typeof value !== "string") return value;
 
     // convert strings
     const match = value.match(nameFromWikilinkRegex);
