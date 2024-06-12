@@ -17,13 +17,11 @@ export const CONFIG = {
   METADATA_URI: `obsidian://advanced-uri?vault=obsidian-caleb&commandid=metadata-extractor%253Awrite-metadata-json`,
   METADATA_PLUGIN_DIR: ".obsidian/plugins/metadata-extractor",
   OBSIDIAN_DIR: path.resolve(process.cwd() + "/../.."),
-  DIST_DIR: "./dist",
+  DIST_DIR: path.resolve(process.cwd() + "/../dist"),
   // DIST_DIR:
   //   "/Users/chuangcaleb/Documents/ComputerScience/web/chuangcaleb.com/src/content",
-  COLLECTIONS_DIR: "obsidian-collection",
+  // COLLECTIONS_DIR: "obsidian-collection",
   NOTES_DIR: "obsidian-note",
-  GOOD_GLOBS: ["8 public/post/**"],
-  BAD_GLOBS: ["**/archive/**", "**/draft/**"],
   SOURCE_PATHS: [publicPostsSource],
   COLLECTION_TAGS: ["📂/collection", "📂/collection/series"],
 };

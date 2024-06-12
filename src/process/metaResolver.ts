@@ -1,5 +1,5 @@
 import path from "path";
-import { MappedMetadataCacheItem } from "./interfaces/cache";
+import { MappedMetadataCacheItem } from "../interfaces/cache";
 import { getNoteRoute } from "./string";
 
 const nameFromWikilinkRegex = /\[\[([^|\]]+)/;

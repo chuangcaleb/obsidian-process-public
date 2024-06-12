@@ -1,4 +1,4 @@
-import { extendedFrontMatterCache } from "./interfaces/obsidian-extractor";
+import { extendedFrontMatterCache } from "../interfaces/obsidian-extractor";
 import { MetaResolver } from "./metaResolver";
 
 export function processFrontmatter(

@@ -1,15 +1,13 @@
 import { spawn } from "child_process";
 import fs from "fs";
-import matter from "gray-matter";
-import YAML from "js-yaml";
 import path from "path";
-import { CONFIG } from "./config";
+import { CONFIG } from "../config";
 import {
   CollectionCache,
   CollectionCacheEntries,
   MappedMetadataCacheItem,
-} from "./interfaces/cache";
-import { Metadata } from "./interfaces/obsidian-extractor";
+} from "../interfaces/cache";
+import { Metadata } from "../interfaces/obsidian-extractor";
 import { processFrontmatter } from "./markdown";
 import { MetaResolver } from "./metaResolver";
 import {
@@ -18,7 +16,7 @@ import {
   slugify,
   stripWikilink,
 } from "./string";
-import { customWriteDir } from "./write";
+import { customWriteDir } from "../write";
 // import { parseYaml, stringifyYaml } from "obsidian";
 
 const flag = process.argv.indexOf("-e") > -1;
@@ -141,23 +139,12 @@ for (const collection of unWikilinkedCollectionCache) {
 /*                                    write                                   */
 /* -------------------------------------------------------------------------- */
 
-// clear dist dir
-// if (fs.existsSync(CONFIG.DIST_DIR))
-//   fs.rmSync(CONFIG.DIST_DIR, { recursive: true });
-
-// create folder
-const notesDistDir = path.join(CONFIG.DIST_DIR, CONFIG.NOTES_DIR);
-customWriteDir(notesDistDir);
-
 // write cache
 // const metadataDistPath = path.join(metadataDistDir, "/metadata.json");
 // fs.writeFileSync(metadataDistPath, JSON.stringify(metadataCache));
 
 // write each file
-for (const file of metadataCache) {
-  const source = path.join(CONFIG.OBSIDIAN_DIR, file.relativeSourcePath);
-  const destination = path.join(notesDistDir, file.relativePath);
-
+const finalMetadata = metadataCache.map((file) => {
   // prepare final frontmatter
   // TODO: sanitize links
   // TODO: add links/backlinks into frontmatter?
@@ -166,25 +153,14 @@ for (const file of metadataCache) {
     ...processFrontmatter(file.frontmatter, Resolver),
     slug: slugify(getNoteRoute(file.relativePath)),
   };
+  return { ...file, frontmatter: finalFrontmatter };
+});
 
-  const sourceFile = fs.readFileSync(source);
-  const newFileContent = matter.stringify(
-    matter(sourceFile),
-    finalFrontmatter,
-    {
-      // need this segment for emojis in frontmatter
-      engines: {
-        yaml: {
-          parse: YAML.load as (str: string) => object,
-          stringify: YAML.dump,
-        },
-      },
-    }
-  );
+// clear dist dir
+if (fs.existsSync(CONFIG.DIST_DIR))
+  fs.rmSync(CONFIG.DIST_DIR, { recursive: true });
+customWriteDir(CONFIG.DIST_DIR);
 
-  // mkdir if not exists
-  const { dir } = path.parse(destination);
-  customWriteDir(dir);
-  fs.writeFileSync(destination, newFileContent);
-  // fs.copyFileSync(source, destination);
-}
+// write
+const destination = path.join(CONFIG.DIST_DIR, "processed-metadata.json");
+fs.writeFileSync(destination, JSON.stringify(finalMetadata));
