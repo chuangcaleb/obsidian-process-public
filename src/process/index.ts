@@ -101,7 +101,6 @@ const unWikilinkedCollectionCache: CollectionCacheEntries = Object.entries(
 // popualate collection note in cache with matching collection items
 for (const collection of unWikilinkedCollectionCache) {
   const collectionNoteName = collection[0];
-  const collectionItems = collection[1].map(getNoteRoute);
   const collectionNoteIndex = metadataCache.findIndex(
     (note) => note.fileName === collectionNoteName
   );
@@ -129,6 +128,17 @@ for (const collection of unWikilinkedCollectionCache) {
     };
     continue;
   }
+  // ! NEXT FIXME: get all tags, too, not just collection metadata
+  // if (collectionNoteCopy.frontmatter?.longform) {
+  //   metadataCache[collectionNoteIndex].frontmatter = {
+  //     ...metadataCache[collectionNoteIndex].frontmatter,
+  //     collectionItems: collectionNoteCopy.frontmatter.longform.scenes,
+  //     longform: undefined,
+  //   };
+  //   console.log(metadataCache[collectionNoteIndex].frontmatter);
+  //   continue;
+  // }
+  const collectionItems = collection[1].map(getNoteRoute);
   metadataCache[collectionNoteIndex].frontmatter!.collectionItems =
     collectionItems;
 }
