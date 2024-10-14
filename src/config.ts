@@ -17,7 +17,7 @@ export const CONFIG = {
   METADATA_URI: `obsidian://advanced-uri?vault=obsidian-caleb&commandid=metadata-extractor%253Awrite-metadata-json`,
   METADATA_PLUGIN_DIR: ".obsidian/plugins/metadata-extractor",
   OBSIDIAN_DIR: path.resolve(process.cwd() + "/../.."),
-  DIST_DIR: path.resolve(process.cwd() + "/../dist"),
+  DIST_DIR: path.resolve(process.cwd(), "./dist"),
   // DIST_DIR:
   //   "/Users/chuangcaleb/Documents/ComputerScience/web/chuangcaleb.com/src/content",
   // COLLECTIONS_DIR: "obsidian-collection",

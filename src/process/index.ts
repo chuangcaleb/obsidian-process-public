@@ -16,28 +16,16 @@ import {
   slugify,
   stripWikilink,
 } from "./string";
-import { customWriteDir } from "../write";
-// import { parseYaml, stringifyYaml } from "obsidian";
+import { customWriteDir } from "../utils/write";
+import { runCommand } from "../utils/runCommand";
+
+/* -------------------------------------------------------------------------- */
+/*                           Run Metadata Extractor                           */
+/* -------------------------------------------------------------------------- */
 
 const flag = process.argv.indexOf("-e") > -1;
 if (flag) {
-  const child = spawn("open", [CONFIG.METADATA_URI]);
-
-  child.stdout.on("data", (data) => {
-    console.log(`stdout:\n${data}`);
-  });
-
-  child.stderr.on("data", (data) => {
-    console.error(`stderr: ${data}`);
-  });
-
-  child.on("error", (error) => {
-    console.error(`error: ${error.message}`);
-  });
-
-  child.on("close", (code) => {
-    console.log(`child process exited with code ${code}`);
-  });
+  runCommand(spawn("open", [CONFIG.METADATA_URI]));
 }
 
 /* -------------------------------------------------------------------------- */

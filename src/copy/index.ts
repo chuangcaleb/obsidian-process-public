@@ -4,7 +4,7 @@ import jsYaml from "js-yaml";
 import path from "path";
 import { CONFIG } from "../config";
 import { MappedMetadataCacheItem } from "../interfaces/cache";
-import { customWriteDir } from "../write";
+import { customWriteDir } from "../utils/write";
 
 const metadataPath = path.join(CONFIG.DIST_DIR, "processed-metadata.json");
 const metadata: MappedMetadataCacheItem[] = JSON.parse(
