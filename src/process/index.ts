@@ -86,13 +86,15 @@ for (const file of metadataCache) {
   if (!collection) continue; // FIXME: sometimes collection is an array
 
   const slugRelativePath = getNoteRoute(file.relativePath);
+  // if (Array.isArray(collection)) {
+  // collection.forEach(c=> )
+  // }
   if (Array.isArray(collectionCache[collection])) {
     collectionCache[collection].push(slugRelativePath);
   } else {
     collectionCache[collection] = [slugRelativePath];
   }
 }
-
 // strip the [[]] off the keys
 const unWikilinkedCollectionCache: CollectionCacheEntries = Object.entries(
   collectionCache
@@ -110,12 +112,14 @@ for (const collection of unWikilinkedCollectionCache) {
 
   const collectionNoteCopy = metadataCache[collectionNoteIndex];
 
-  // * if series, add frontmatter to collections-cache
-  metadataCache[collectionNoteIndex].relativePath = renameFilenameFromPath(
-    collectionNoteCopy.relativePath,
-    "index"
-  );
+  if (collectionNoteCopy.frontmatter?.index) {
+    collectionNoteCopy.relativePath = renameFilenameFromPath(
+      collectionNoteCopy.relativePath,
+      "index"
+    );
+  }
 
+  // * if series, add frontmatter to collections-cache
   // create frontmatter if doesn't exist
   if (!collectionNoteCopy.frontmatter) {
     metadataCache[collectionNoteIndex].frontmatter = {};
