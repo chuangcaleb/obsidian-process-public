@@ -26,12 +26,14 @@ const setupCommands = [
   `cd ${notesDistDir}`,
   "git init .",
   `git remote add origin ${CONFIG.PUBLIC_REPO}`,
-  // `git fetch`,
-  // `git switch main`,
-  "git pull origin main",
+  `git pull origin main`,
 ];
 
-exec(`(${setupCommands.join(";")})`);
+try {
+  exec(`(${setupCommands.join(";")})`);
+} catch (error) {
+  console.log(error);
+}
 
 /* -------------------------------------------------------------------------- */
 /*                                 copy files                                 */
@@ -67,12 +69,18 @@ for (const file of metadata) {
 /* -------------------------------------------------------------------------- */
 
 fs.copyFileSync(`.gitignore`, path.join(notesDistDir, ".gitignore"));
+
 const currentDatetime = new Date().toLocaleString("en-gb");
 const pushCommands = [
   `cd ${notesDistDir}`,
   // 'git checkout origin/main -f'
-  // "git add -A",
-  // `git commit -m "${currentDatetime}"`,
+  "git add -A",
+  `git commit -m "${currentDatetime}"`,
   // "git push origin main",
 ];
-promisedExec(`(${pushCommands.join(";")})`);
+
+try {
+  exec(`(${pushCommands.join(";")})`);
+} catch (error) {
+  console.log(error);
+}

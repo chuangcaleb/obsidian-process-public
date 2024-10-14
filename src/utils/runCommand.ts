@@ -1,7 +1,5 @@
 import {
-  ChildProcessWithoutNullStreams,
-  spawn,
-  SpawnOptionsWithoutStdio,
+  ChildProcessWithoutNullStreams
 } from "child_process";
 
 export function runCommand(childProcess: ChildProcessWithoutNullStreams) {
