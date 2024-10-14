@@ -24,4 +24,5 @@ export const CONFIG = {
   NOTES_DIR: "obsidian-note",
   SOURCE_PATHS: [publicPostsSource],
   COLLECTION_TAGS: ["📂/collection", "📂/collection/series"],
+  PUBLIC_REPO: "https://github.com/chuangcaleb/obsidian-caleb-public.git",
 };

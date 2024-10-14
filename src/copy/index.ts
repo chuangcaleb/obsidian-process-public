@@ -1,3 +1,4 @@
+import { exec } from "child_process";
 import fs from "fs";
 import matter from "gray-matter";
 import jsYaml from "js-yaml";
@@ -11,11 +12,30 @@ const metadata: MappedMetadataCacheItem[] = JSON.parse(
   fs.readFileSync(metadataPath, "utf8")
 );
 
+/* -------------------------------------------------------------------------- */
+/*                                    setup                                   */
+/* -------------------------------------------------------------------------- */
+
 // create folder
 const notesDistDir = path.join(CONFIG.DIST_DIR, CONFIG.NOTES_DIR);
 // clear dist dir
 if (fs.existsSync(notesDistDir)) fs.rmSync(notesDistDir, { recursive: true });
 customWriteDir(notesDistDir);
+
+const setupCommands = [
+  `cd ${notesDistDir}`,
+  "git init .",
+  `git remote add origin ${CONFIG.PUBLIC_REPO}`,
+  // `git fetch`,
+  // `git switch main`,
+  "git pull origin main",
+];
+
+exec(`(${setupCommands.join(";")})`);
+
+/* -------------------------------------------------------------------------- */
+/*                                 copy files                                 */
+/* -------------------------------------------------------------------------- */
 
 for (const file of metadata) {
   const source = path.join(CONFIG.OBSIDIAN_DIR, file.relativeSourcePath);
@@ -41,3 +61,18 @@ for (const file of metadata) {
   customWriteDir(dir);
   fs.writeFileSync(destination, newFileContent);
 }
+
+/* -------------------------------------------------------------------------- */
+/*                                     git                                    */
+/* -------------------------------------------------------------------------- */
+
+fs.copyFileSync(`.gitignore`, path.join(notesDistDir, ".gitignore"));
+const currentDatetime = new Date().toLocaleString("en-gb");
+const pushCommands = [
+  `cd ${notesDistDir}`,
+  // 'git checkout origin/main -f'
+  // "git add -A",
+  // `git commit -m "${currentDatetime}"`,
+  // "git push origin main",
+];
+promisedExec(`(${pushCommands.join(";")})`);
