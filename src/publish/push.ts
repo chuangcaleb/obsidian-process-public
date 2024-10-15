@@ -6,34 +6,12 @@ import path from "path";
 import { CONFIG } from "../config";
 import { MappedMetadataCacheItem } from "../interfaces/cache";
 import { customWriteDir } from "../utils/write";
+import { notesDistDir } from "./consts";
 
 const metadataPath = path.join(CONFIG.DIST_DIR, "processed-metadata.json");
 const metadata: MappedMetadataCacheItem[] = JSON.parse(
   fs.readFileSync(metadataPath, "utf8")
 );
-
-/* -------------------------------------------------------------------------- */
-/*                                    setup                                   */
-/* -------------------------------------------------------------------------- */
-
-// create folder
-const notesDistDir = path.join(CONFIG.DIST_DIR, CONFIG.NOTES_DIR);
-// clear dist dir
-if (fs.existsSync(notesDistDir)) fs.rmSync(notesDistDir, { recursive: true });
-customWriteDir(notesDistDir);
-
-const setupCommands = [
-  `cd ${notesDistDir}`,
-  "git init .",
-  `git remote add origin ${CONFIG.PUBLIC_REPO}`,
-  `git pull origin main`,
-];
-
-try {
-  exec(`(${setupCommands.join(";")})`);
-} catch (error) {
-  console.log(error);
-}
 
 /* -------------------------------------------------------------------------- */
 /*                                 copy files                                 */

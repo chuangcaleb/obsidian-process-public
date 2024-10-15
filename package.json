@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "process": "ts-node src/process",
-    "copy": "ts-node src/copy"
+    "publish": "ts-node src/publish/setup; ts-node src/publish/push"
   },
   "keywords": [],
   "author": "",
