@@ -54,7 +54,7 @@ const pushCommands = [
   // 'git checkout origin/main -f'
   "git add -A",
   `git commit -m "${currentDatetime}"`,
-  // "git push origin main",
+  "git push origin main",
 ];
 
 try {

@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "process": "ts-node src/process",
-    "publish": "ts-node src/publish/setup; ts-node src/publish/push"
+    "publish": "ts-node src/publish/setup; ts-node src/publish/push",
+    "start": "pnpm run process -e; sleep 10; pnpm run publish"
   },
   "keywords": [],
   "author": "",
