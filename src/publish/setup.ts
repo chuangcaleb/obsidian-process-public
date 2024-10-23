@@ -12,6 +12,10 @@ import { notesDistDir } from "./consts";
 if (fs.existsSync(notesDistDir)) fs.rmSync(notesDistDir, { recursive: true });
 customWriteDir(notesDistDir);
 
+// early exit if --no-git
+const flag = process.argv.indexOf("--no-git") > -1;
+if (flag) process.exit();
+
 const setupCommands = [
   `cd ${notesDistDir}`,
   "git init .",

@@ -46,6 +46,10 @@ for (const file of metadata) {
 /*                                     git                                    */
 /* -------------------------------------------------------------------------- */
 
+// early exit if --no-git
+const flag = process.argv.indexOf("--no-git") > -1;
+if (flag) process.exit();
+
 fs.copyFileSync(`.gitignore`, path.join(notesDistDir, ".gitignore"));
 
 const currentDatetime = new Date().toLocaleString("en-gb");
