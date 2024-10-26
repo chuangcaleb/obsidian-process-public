@@ -144,7 +144,7 @@ for (const collection of unWikilinkedCollectionCache) {
   //   continue;
   // }
   const collectionItems = collectionNotesNames.map(getNoteRoute);
-  collectionNote.frontmatter = { collectionItems };
+  collectionNote.frontmatter!.collectionItems = collectionItems;
 }
 
 // TODO: slugify everything?
