@@ -19,10 +19,14 @@ export function renameFilenameFromPath(string: string, newFilename: string) {
   return path.join(dir, newFilename + ext);
 }
 
-export function getNoteRoute(filepath: string) {
+export function getNoteRouteWithOverride(filepath: string, isIndex?: boolean) {
   const { dir, name } = path.parse(filepath);
-  if (name === "index") return slugify(dir);
+  if (name === "index" || isIndex) return slugify(dir);
   return slugify(path.join(dir, name));
+}
+
+export function getNoteRoute(filepath: string) {
+  return getNoteRouteWithOverride(filepath);
 }
 
 export function stripWikilink(wikilink: string) {

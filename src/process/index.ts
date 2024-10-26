@@ -14,6 +14,7 @@ import { processFrontmatter } from "./markdown";
 import { MetaResolver } from "./metaResolver";
 import {
   getNoteRoute,
+  getNoteRouteWithOverride,
   renameFilenameFromPath,
   slugify,
   stripWikilink,
@@ -78,7 +79,10 @@ for (const file of metadataCache) {
   // if note is not a collection, continue
   if (!noteParents) continue; // FIXME: sometimes collection is an array
 
-  const slugRelativePath = getNoteRoute(file.relativePath);
+  const slugRelativePath = getNoteRouteWithOverride(
+    file.relativePath,
+    !!file.frontmatter?.index
+  );
 
   noteParents.forEach((noteParent: string) => {
     // create or add to array
@@ -140,7 +144,7 @@ for (const collection of unWikilinkedCollectionCache) {
   //   continue;
   // }
   const collectionItems = collectionNotesNames.map(getNoteRoute);
-  collectionNote.frontmatter!.collectionItems = collectionItems;
+  collectionNote.frontmatter = { collectionItems };
 }
 
 // TODO: slugify everything?
