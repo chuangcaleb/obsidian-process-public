@@ -4,7 +4,7 @@ import path from "path";
 const PUBLIC_POSTS_DIR = "8 public/post/";
 const publicPostsSource = {
   dir: PUBLIC_POSTS_DIR,
-  filter: (path: string) => {
+  filterPath: (path: string) => {
     const BAD_GLOBS = ["**/archive/**", "**/draft/**"];
     return (
       minimatch(path, `${PUBLIC_POSTS_DIR}/**`) &&

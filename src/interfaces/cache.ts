@@ -4,9 +4,7 @@ export interface MappedMetadataCacheItem extends Metadata {
   relativeSourcePath: string;
 }
 
-export interface CollectionCache {
-  [key: string]: string[];
-}
+export type CollectionCache = Record<string, string[]>;
 
 type Entries<T> = {
   [K in keyof T]: [K, T[K]];

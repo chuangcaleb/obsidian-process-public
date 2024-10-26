@@ -8,6 +8,8 @@ import {
   MappedMetadataCacheItem,
 } from "../interfaces/cache";
 import { Metadata } from "../interfaces/obsidian-extractor";
+import { runCommand } from "../utils/runCommand";
+import { customWriteDir } from "../utils/write";
 import { processFrontmatter } from "./markdown";
 import { MetaResolver } from "./metaResolver";
 import {
@@ -16,8 +18,6 @@ import {
   slugify,
   stripWikilink,
 } from "./string";
-import { customWriteDir } from "../utils/write";
-import { runCommand } from "../utils/runCommand";
 
 /* -------------------------------------------------------------------------- */
 /*                           Run Metadata Extractor                           */
@@ -47,16 +47,16 @@ const metadataCache: MappedMetadataCacheItem[] = [];
 /* -------------------------------------------------------------------------- */
 
 for (const file of originalMetadataCache) {
-  const srcRelPath = file.relativePath;
+  const relativeSourcePath = file.relativePath;
   const source = CONFIG.SOURCE_PATHS.find((source) =>
-    source.filter(srcRelPath)
+    source.filterPath(relativeSourcePath)
   );
   if (!source) continue;
 
   metadataCache.push({
-    relativeSourcePath: file.relativePath,
+    relativeSourcePath,
     ...file,
-    relativePath: srcRelPath.slice(source.dir.length),
+    relativePath: relativeSourcePath.slice(source.dir.length),
     // TODO: pop first H1 heading?
   });
 }
@@ -69,53 +69,63 @@ const Resolver = new MetaResolver(metadataCache);
 /* -------------------------------------------------------------------------- */
 
 const collectionCache: CollectionCache = {};
+
+//  * build collection cache
 for (const file of metadataCache) {
   const collection = file.frontmatter?.collection;
+
+  // if note is not a collection, continue
   if (!collection) continue; // FIXME: sometimes collection is an array
 
   const slugRelativePath = getNoteRoute(file.relativePath);
   // if (Array.isArray(collection)) {
   // collection.forEach(c=> )
   // }
+
+  // add to the collection cache
   if (Array.isArray(collectionCache[collection])) {
     collectionCache[collection].push(slugRelativePath);
   } else {
     collectionCache[collection] = [slugRelativePath];
   }
 }
+
 // strip the [[]] off the keys
 const unWikilinkedCollectionCache: CollectionCacheEntries = Object.entries(
   collectionCache
 ).map(([key, values]) => [stripWikilink(key), values]);
 
-// popualate collection note in cache with matching collection items
+// populate collection note in cache with matching collection items
 for (const collection of unWikilinkedCollectionCache) {
-  const collectionNoteName = collection[0];
-  const collectionNoteIndex = metadataCache.findIndex(
+  // first index element is the name, second is the list of children
+  const [collectionNoteName, collectionNotesNames] = collection;
+
+  // find the corresponding collection note
+  const collectionNote = metadataCache.find(
     (note) => note.fileName === collectionNoteName
   );
 
-  if (collectionNoteIndex === -1)
+  // early exit, should never happen
+  if (!collectionNote)
     throw new Error(`invalid collection note: ${collectionNoteName}`);
 
-  const collectionNoteCopy = metadataCache[collectionNoteIndex];
-
-  if (collectionNoteCopy.frontmatter?.index) {
-    collectionNoteCopy.relativePath = renameFilenameFromPath(
-      collectionNoteCopy.relativePath,
+  // if is an index file, then rename filename as "index"
+  if (collectionNote.frontmatter?.index) {
+    collectionNote.relativePath = renameFilenameFromPath(
+      collectionNote.relativePath,
       "index"
     );
   }
 
   // * if series, add frontmatter to collections-cache
-  // create frontmatter if doesn't exist
-  if (!collectionNoteCopy.frontmatter) {
-    metadataCache[collectionNoteIndex].frontmatter = {};
-  }
-  if (collectionNoteCopy.frontmatter?.series) {
-    metadataCache[collectionNoteIndex].frontmatter = {
-      ...metadataCache[collectionNoteIndex].frontmatter,
-      collectionItems: collectionNoteCopy.frontmatter.series,
+  // create frontmatter if doesn't exist — unnecessary?
+  // if (!collectionNote.frontmatter) {
+  //   collectionNote.frontmatter = {};
+  // }
+  if (collectionNote.frontmatter?.series) {
+    collectionNote.frontmatter = {
+      ...(collectionNote.frontmatter ?? {}),
+      collectionItems: collectionNote.frontmatter.series,
       series: true,
     };
     continue;
@@ -130,9 +140,8 @@ for (const collection of unWikilinkedCollectionCache) {
   //   console.log(metadataCache[collectionNoteIndex].frontmatter);
   //   continue;
   // }
-  const collectionItems = collection[1].map(getNoteRoute);
-  metadataCache[collectionNoteIndex].frontmatter!.collectionItems =
-    collectionItems;
+  const collectionItems = collectionNotesNames.map(getNoteRoute);
+  collectionNote.frontmatter!.collectionItems = collectionItems;
 }
 
 // TODO: slugify everything?
