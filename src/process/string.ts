@@ -1,5 +1,6 @@
 import path from "path";
 
+// it is crucial that this works exactly the same as astro's slugify
 // https://byby.dev/js-slugify-string
 export function slugify(str: string) {
   return String(str)

@@ -18,6 +18,7 @@ import {
   slugify,
   stripWikilink,
 } from "./string";
+import { asArray } from "./utils";
 
 /* -------------------------------------------------------------------------- */
 /*                           Run Metadata Extractor                           */
@@ -72,22 +73,20 @@ const collectionCache: CollectionCache = {};
 
 //  * build collection cache
 for (const file of metadataCache) {
-  const collection = file.frontmatter?.collection;
+  const noteParents = file.frontmatter?.collection;
 
   // if note is not a collection, continue
-  if (!collection) continue; // FIXME: sometimes collection is an array
+  if (!noteParents) continue; // FIXME: sometimes collection is an array
 
   const slugRelativePath = getNoteRoute(file.relativePath);
-  // if (Array.isArray(collection)) {
-  // collection.forEach(c=> )
-  // }
 
-  // add to the collection cache
-  if (Array.isArray(collectionCache[collection])) {
-    collectionCache[collection].push(slugRelativePath);
-  } else {
-    collectionCache[collection] = [slugRelativePath];
-  }
+  noteParents.forEach((noteParent: string) => {
+    // create or add to array
+    collectionCache[noteParent] = [
+      ...asArray(collectionCache[noteParent]),
+      slugRelativePath,
+    ];
+  });
 }
 
 // strip the [[]] off the keys
