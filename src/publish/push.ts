@@ -5,11 +5,9 @@ import path from "path";
 import { CONFIG } from "../config";
 import { MappedMetadataCacheItem } from "../interfaces/cache";
 import { customWriteDir } from "../utils/write";
-import { notesDistDir } from "./consts";
 
-const metadataPath = path.join(CONFIG.DIST_DIR, "processed-metadata.json");
 const metadata: MappedMetadataCacheItem[] = JSON.parse(
-  fs.readFileSync(metadataPath, "utf8")
+  fs.readFileSync(CONFIG.PROCESSED_METADATA_FILEPATH, "utf8")
 );
 
 /* -------------------------------------------------------------------------- */
@@ -18,7 +16,7 @@ const metadata: MappedMetadataCacheItem[] = JSON.parse(
 
 for (const file of metadata) {
   const source = path.join(CONFIG.OBSIDIAN_DIR, file.relativeSourcePath);
-  const destination = path.join(notesDistDir, file.relativePath);
+  const destination = path.join(CONFIG.NOTES_DIST_DIR, file.relativePath);
 
   const sourceFile = fs.readFileSync(source);
   const newFileContent = matter.stringify(

@@ -176,5 +176,4 @@ if (fs.existsSync(CONFIG.DIST_DIR))
 customWriteDir(CONFIG.DIST_DIR);
 
 // write
-const destination = path.join(CONFIG.DIST_DIR, "processed-metadata.json");
-fs.writeFileSync(destination, JSON.stringify(finalMetadata));
+fs.writeFileSync(CONFIG.PROCESSED_METADATA_FILEPATH, JSON.stringify(finalMetadata));

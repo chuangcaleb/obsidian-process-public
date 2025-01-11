@@ -1,10 +1,12 @@
 import fs from "fs";
 import { customWriteDir } from "../utils/write";
-import { notesDistDir } from "./consts";
+import { CONFIG } from "../config";
 
 /* -------------------------------------------------------------------------- */
 /*                                    setup                                   */
 /* -------------------------------------------------------------------------- */
+
+const notesDistDir = CONFIG.NOTES_DIST_DIR;
 
 // clear dist dir
 if (fs.existsSync(notesDistDir)) fs.rmSync(notesDistDir, { recursive: true });
