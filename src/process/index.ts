@@ -34,12 +34,8 @@ if (flag) {
 /*                                    setup                                   */
 /* -------------------------------------------------------------------------- */
 
-const metadataPath = path.join(
-  CONFIG.OBSIDIAN_DIR,
-  CONFIG.METADATA_PLUGIN_DIR,
-  "metadata.json"
-);
-const cacheBuffer = fs.readFileSync(metadataPath);
+
+const cacheBuffer = fs.readFileSync(CONFIG.SOURCE_METADATA_FILEPATH);
 const originalMetadataCache: Metadata[] = JSON.parse(cacheBuffer.toString());
 
 const metadataCache: MappedMetadataCacheItem[] = [];

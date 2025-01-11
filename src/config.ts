@@ -26,12 +26,20 @@ const BASE_CONFIG = {
   PUBLIC_REPO: "https://github.com/chuangcaleb/obsidian-caleb-public.git",
 };
 
-
 const notesDistDir = path.join(BASE_CONFIG.DIST_DIR, BASE_CONFIG.NOTES_SUBDIR);
-const processedMetadataFilepath = path.join(BASE_CONFIG.DIST_DIR, BASE_CONFIG.PROCESSED_METADATA_FILENAME);
+const processedMetadataFilepath = path.join(
+  BASE_CONFIG.DIST_DIR,
+  BASE_CONFIG.PROCESSED_METADATA_FILENAME
+);
+const sourceMetadataFilepath = path.join(
+  BASE_CONFIG.OBSIDIAN_DIR,
+  BASE_CONFIG.METADATA_PLUGIN_DIR,
+  "metadata.json"
+);
 
 export const CONFIG = {
   ...BASE_CONFIG,
   NOTES_DIST_DIR: notesDistDir,
   PROCESSED_METADATA_FILEPATH: processedMetadataFilepath,
-}
+  SOURCE_METADATA_FILEPATH: sourceMetadataFilepath,
+};
