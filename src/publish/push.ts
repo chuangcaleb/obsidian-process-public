@@ -16,7 +16,7 @@ const metadata: MappedMetadataCacheItem[] = JSON.parse(
 
 for (const file of metadata) {
   const source = path.join(CONFIG.OBSIDIAN_DIR, file.relativeSourcePath);
-  const destination = path.join(CONFIG.NOTES_DIST_DIR, file.relativePath);
+  const destination = path.join(CONFIG.DIST_NOTES_DIR, file.relativePath);
 
   const sourceFile = fs.readFileSync(source);
   const newFileContent = matter.stringify(

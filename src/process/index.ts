@@ -1,6 +1,5 @@
 import { spawn } from "child_process";
 import fs from "fs";
-import path from "path";
 import { CONFIG } from "../config";
 import {
   CollectionCache,
@@ -33,7 +32,6 @@ if (flag) {
 /* -------------------------------------------------------------------------- */
 /*                                    setup                                   */
 /* -------------------------------------------------------------------------- */
-
 
 const cacheBuffer = fs.readFileSync(CONFIG.SOURCE_METADATA_FILEPATH);
 const originalMetadataCache: Metadata[] = JSON.parse(cacheBuffer.toString());
@@ -166,10 +164,16 @@ const finalMetadata = metadataCache.map((file) => {
   return { ...file, frontmatter: finalFrontmatter };
 });
 
-// clear dist dir
-if (fs.existsSync(CONFIG.DIST_DIR))
-  fs.rmSync(CONFIG.DIST_DIR, { recursive: true });
-customWriteDir(CONFIG.DIST_DIR);
+// create dist dir if doesn't exist
+if (!fs.existsSync(CONFIG.DIST_DIR)) customWriteDir(CONFIG.DIST_DIR);
+
+// reset ephemeral dist
+if (fs.existsSync(CONFIG.DIST_EPHEMERAL_PATH))
+  fs.rmSync(CONFIG.DIST_EPHEMERAL_PATH, { recursive: true });
+else customWriteDir(CONFIG.DIST_EPHEMERAL_PATH);
 
 // write
-fs.writeFileSync(CONFIG.PROCESSED_METADATA_FILEPATH, JSON.stringify(finalMetadata));
+fs.writeFileSync(
+  CONFIG.PROCESSED_METADATA_FILEPATH,
+  JSON.stringify(finalMetadata)
+);
