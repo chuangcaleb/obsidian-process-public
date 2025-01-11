@@ -7,9 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "process": "ts-node src/process",
     "publish": "ts-node src/publish/setup; ts-node src/publish/push",
-    "publish:no-git": "ts-node src/publish/setup --no-git; ts-node src/publish/push --no-git",
-    "start": "pnpm run process -e; sleep 5; pnpm run publish",
-    "start:no-git": "pnpm run process -e; sleep 3; pnpm run publish:no-git"
+    "start": "pnpm run process -e; sleep 5; pnpm run publish"
   },
   "keywords": [],
   "author": "",

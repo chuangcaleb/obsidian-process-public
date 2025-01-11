@@ -1,4 +1,3 @@
-import { exec } from "child_process";
 import fs from "fs";
 import matter from "gray-matter";
 import jsYaml from "js-yaml";
@@ -40,29 +39,4 @@ for (const file of metadata) {
   const { dir } = path.parse(destination);
   customWriteDir(dir);
   fs.writeFileSync(destination, newFileContent);
-}
-
-/* -------------------------------------------------------------------------- */
-/*                                     git                                    */
-/* -------------------------------------------------------------------------- */
-
-// early exit if --no-git
-const flag = process.argv.indexOf("--no-git") > -1;
-if (flag) process.exit();
-
-fs.copyFileSync(`.gitignore`, path.join(notesDistDir, ".gitignore"));
-
-const currentDatetime = new Date().toLocaleString("en-gb");
-const pushCommands = [
-  `cd ${notesDistDir}`,
-  // 'git checkout origin/main -f'
-  "git add -A",
-  `git commit -m "${currentDatetime}"`,
-  "git push origin main",
-];
-
-try {
-  exec(`(${pushCommands.join(";")})`);
-} catch (error) {
-  console.log(error);
 }
